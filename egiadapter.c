@@ -43,6 +43,7 @@
   constant and macro definitions
 *******************************************************************************/
 
+
 #define BUFF_LEN 1024
 
 #define SINQHM_DO_REQUEST_LOG 1
@@ -236,7 +237,7 @@ void doRequestLog(MaRequest *rq, char *uri)
     //
     //  Rotate logs when full
     //
-    if (sbuf.st_mode & S_IFREG && (unsigned) sbuf.st_size > logMaxSize) {
+    if (sbuf.st_mode & S_IFREG && /* (unsigned) */ sbuf.st_size > logMaxSize) {
       rotateLog();
     }
   }
@@ -1167,7 +1168,7 @@ static void readHMDataEgi(MaRequest *rq, char *script, char *uri, char *query,
   }
   maSetResponseCode(rq,200);
   maSetHeader(rq,"Content-type: application/x-sinqhm",0);
-  snprintf(buffer,255,"Content-length: %d", (end - start)*sizeof(int));
+  snprintf(buffer,255,"Content-length: %lu", (end - start)*sizeof(int));
   maSetHeader(rq,buffer,0);
   maWrite(rq,(char *)&dataPtr[start], (end - start)*sizeof(int));
 
@@ -1237,7 +1238,7 @@ static void processHMDataEgi(MaRequest *rq, char *script, char *uri, char *query
 
   maSetResponseCode(rq,200);
   maSetHeader(rq,"Content-type: application/x-sinqhm",0);
-  snprintf(buffer,255,"Content-length: %d", length*sizeof(int));
+  snprintf(buffer,255,"Content-length: %lu", length*sizeof(int));
   maSetHeader(rq,buffer,0);
   maWrite(rq,result->u.cPtr, length*sizeof(int));
 
@@ -1267,7 +1268,7 @@ static void printDaqStatus(MaRequest *rq)
   char buffer[256];  
   volatile axis_descr_type  *axis_descr_ptr;
   int axis;
-  int bank;
+  uint bank;
   volatile histo_descr_type *histo_descr_ptr;
   volatile unsigned int *shm_cfg_ptr;
   time_t currentTime;
@@ -1688,7 +1689,8 @@ char *postData, int postLen)
   char buffer[PRINT_BUFFERLEN];
 
   volatile unsigned int *buff;
-  int i,dispsize;
+  /* int i,dispsize; */
+  uint i, dispsize;
   volatile histo_descr_type *histo_descr_ptr;
   volatile uint32 *RawDataBuffer;
   uint32 val;
@@ -2207,7 +2209,7 @@ static void showConfigShm(MaRequest *rq, char *script, char *uri, char *query,
   maWriteStr(rq,"</tbody></table>");
 
   maWriteFmt(rq,"%8d  %8d  %8d  %8d  %8d  %8d  %8d  %8d\n\n",buff[0], buff[1], buff[2], buff[3], buff[4], buff[5], buff[6], buff[7]);
-  for(i=0;i<SHM_CFG_SIZE/(8*sizeof(unsigned int));i+=8)
+  for(i=0;((unsigned)i)<SHM_CFG_SIZE/(8*sizeof(unsigned int));i+=8)
   {
     maWriteFmt(rq,"0x%04x:  %08x  %08x  %08x  %08x  %08x  %08x  %08x  %08x\n",i,buff[i],buff[i+1],buff[i+2],buff[i+3],buff[i+4],buff[i+5],buff[i+6],buff[i+7]);
   }
@@ -2895,7 +2897,8 @@ int initializeSINQHM(void)
 {
   int status;
   char *config = NULL;
-  uint32 cfg_valid, clevel;
+  /* uint32 cfg_valid, clevel; */
+  int cfg_valid,clevel;
   char buffer[256];
   volatile histo_descr_type *histo_descr_ptr;
   time_t serverStartupTime;
@@ -3046,6 +3049,5 @@ int closeSINQHM(void)
   releaseShmHisto();
   return 1;
 }
-
 
 /******************************************************************************/

@@ -93,7 +93,7 @@ static inline void *sinqhm_shm_malloc(int key, int *id, int size)
     return 0;
   }
   dataPtr = (void*)shmat(*id,NULL,0);
-  if((int)dataPtr == -1)
+  if(dataPtr == (void*)-1)
   {
     shmctl(*id,IPC_RMID,&shm);
     return 0;

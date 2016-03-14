@@ -581,7 +581,7 @@ int init_filler(void)
   else
   {
     shm_dbg_ptr = getDebugBuffPtr();
-    rt_printk ("init_module(): Debug  SHM allocated: dbg_size     =%9d bytes (shm_dbg_ptr   = 0x%08x)\n",dbg_size ,(unsigned int)shm_dbg_ptr);
+    rt_printk ("init_module(): Debug  SHM allocated: dbg_size     =%9d bytes (shm_dbg_ptr   = 0x%p)\n",dbg_size ,shm_dbg_ptr);
     memset((void*)shm_dbg_ptr, 0, dbg_size);
     shm_dbg_ptr[DBG_SRV_MSG_LEVEL]=DBG_MSG_DEFAULT_LEVEL;
     shm_dbg_ptr[DBG_FIL_ERR_BUFF_SIZE]=DGB_ERROR_BUFF_SIZE;
@@ -591,7 +591,7 @@ int init_filler(void)
 
   // repeat messages for Debug SHM
   dbg_printf(DBGMSG_INFO1, "init_module(): %s",MODULE_COMPILED);
-  dbg_printf(DBGMSG_INFO1, "init_module(): Debug  SHM allocated: dbg_size     =%9d bytes (shm_dbg_ptr   = 0x%08x)\n", dbg_size, (unsigned int)shm_dbg_ptr);
+  dbg_printf(DBGMSG_INFO1, "init_module(): Debug  SHM allocated: dbg_size     =%9d bytes (shm_dbg_ptr   = 0x%p)\n", dbg_size,shm_dbg_ptr);
 
   // allocate Histo SHM
   status = initShmHisto();
@@ -610,7 +610,7 @@ int init_filler(void)
     shm_histo_ptr->server_valid=0;
     shm_histo_ptr->filler_valid=0;
     dbg_printf(DBGMSG_INFO1, "init_module(): Histo  SHM allocated: hst_size     =%9d bytes (shm_histo_ptr = 0x%08x)\n", hst_size, shm_histo_ptr);
-    rt_printk ("init_module(): Histo  SHM allocated: hst_size     =%9d bytes (shm_histo_ptr = 0x%08x)\n", hst_size, (unsigned int)shm_histo_ptr);
+    rt_printk ("init_module(): Histo  SHM allocated: hst_size     =%9d bytes (shm_histo_ptr = 0x%p)\n", hst_size,shm_histo_ptr);
   }
 
 
@@ -645,7 +645,7 @@ int init_filler(void)
     shm_cfg_ptr[CFG_FIL_CFG_VALID]    = CFG_VALID;
 
     dbg_printf(DBGMSG_INFO1, "init_module(): Config SHM allocated: SHM_CFG_SIZE =%9d bytes (shm_cfg_ptr   = 0x%08x)\n", SHM_CFG_SIZE, shm_cfg_ptr);
-    rt_printk ("init_module(): Config SHM allocated: SHM_CFG_SIZE =%9d bytes (shm_cfg_ptr   = 0x%08x)\n", SHM_CFG_SIZE, (unsigned int)shm_cfg_ptr);
+    rt_printk ("init_module(): Config SHM allocated: SHM_CFG_SIZE =%9d bytes (shm_cfg_ptr   = 0x%p)\n", SHM_CFG_SIZE,shm_cfg_ptr);
   }
 
   snprintf((char*)&shm_cfg_ptr[CFG_FIL_COMPTIME_BUFF_START],(CFG_FIL_COMPTIME_BUFF_END-CFG_FIL_COMPTIME_BUFF_START)*4,"%s %s",__DATE__,__TIME__);

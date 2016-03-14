@@ -20,6 +20,7 @@
 #ifndef _DATASHM_H_
 #define _DATASHM_H_
 
+extern "C" {
 
 /*******************************************************************************
   inlining
@@ -233,7 +234,7 @@ __INLINE void releaseShmHisto(void);
   * @param bankno The number of the bank to search a description for
   * @return a pointer to the bank description or NULL if no such bank exists
   */
-__INLINE volatile bank_descr_type* getBankDescription(int bankno);
+__INLINE volatile bank_descr_type* getBankDescription(uint bankno);
 
 
 /**
@@ -242,7 +243,7 @@ __INLINE volatile bank_descr_type* getBankDescription(int bankno);
  * @param axisno The dimension for which to retrieve the axis description
  * @return a pointer to the axis description or NULL if no such axis exists
  */
-__INLINE volatile axis_descr_type *getAxisDescription(int bankno, int axisno);
+__INLINE volatile axis_descr_type *getAxisDescription(uint bankno, uint axisno);
 
 
 /**
@@ -284,5 +285,5 @@ __INLINE volatile histo_descr_type *getShmHistoPtr(void);
 
 
 /******************************************************************************/
-
+}
 #endif //_DATASHM_H_

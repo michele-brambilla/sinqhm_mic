@@ -139,32 +139,32 @@ __INLINE volatile unsigned int *getDebugBuffPtr(void)
  *
  ******************************************************************************/
 
-int datetimestr (char* buff, int len)
-{
-  struct timeval tv;
-  int printed_len;
+/* int datetimestr (char* buff, int len) */
+/* { */
+/*   struct timeval tv; */
+/*   int printed_len; */
 
-#if (defined APP_FILLER) && (defined FILLER_RTAI)
-  struct rtc_time tm;
+/* #if (defined APP_FILLER) && (defined FILLER_RTAI) */
+/*   struct rtc_time tm; */
 
-  do_gettimeofday(&tv);
-  to_tm(tv.tv_sec, &tm);
-  printed_len = snprintf(buff,len,"[%4d/%02d/%02d %02d:%02d:%02d.%06d UTC] ",tm.tm_year,tm.tm_mon,tm.tm_mday,tm.tm_hour,tm.tm_min,tm.tm_sec,(unsigned int)tv.tv_usec);
+/*   do_gettimeofday(&tv); */
+/*   to_tm(tv.tv_sec, &tm); */
+/*   printed_len = snprintf(buff,len,"[%4d/%02d/%02d %02d:%02d:%02d.%06d UTC] ",tm.tm_year,tm.tm_mon,tm.tm_mday,tm.tm_hour,tm.tm_min,tm.tm_sec,(unsigned int)tv.tv_usec); */
 
-#else
+/* #else */
 
-  struct tm  mytm;
-  gettimeofday(&tv,0);
-//  gmtime_r(&(tv.tv_sec), &mytm);
-  localtime_r(&(tv.tv_sec), &mytm);
-  printed_len = snprintf(buff,len,"[%4d/%02d/%02d %02d:%02d:%02d.%06d %s] ",1900+mytm.tm_year,1+mytm.tm_mon,mytm.tm_mday,mytm.tm_hour,mytm.tm_min,mytm.tm_sec,(unsigned int)tv.tv_usec, mytm.tm_zone);
+/*   struct tm  mytm; */
+/*   gettimeofday(&tv,0); */
+/* //  gmtime_r(&(tv.tv_sec), &mytm); */
+/*   localtime_r(&(tv.tv_sec), &mytm); */
+/*   printed_len = snprintf(buff,len,"[%4d/%02d/%02d %02d:%02d:%02d.%06d %s] ",1900+mytm.tm_year,1+mytm.tm_mon,mytm.tm_mday,mytm.tm_hour,mytm.tm_min,mytm.tm_sec,(unsigned int)tv.tv_usec, mytm.tm_zone); */
 
-//  printed_len += snprintf(buff+printed_len,len-printed_len,"[%4d/%02d/%02d %02d:%02d:%02d.%06d localtime mytm=%d  %s] ",1900+mytm.tm_year,1+mytm.tm_mon,mytm.tm_mday,mytm.tm_hour,mytm.tm_min,mytm.tm_sec,(unsigned int)tv.tv_usec,mytm.tm_isdst, mytm.tm_zone);
+/* //  printed_len += snprintf(buff+printed_len,len-printed_len,"[%4d/%02d/%02d %02d:%02d:%02d.%06d localtime mytm=%d  %s] ",1900+mytm.tm_year,1+mytm.tm_mon,mytm.tm_mday,mytm.tm_hour,mytm.tm_min,mytm.tm_sec,(unsigned int)tv.tv_usec,mytm.tm_isdst, mytm.tm_zone); */
 
-#endif
+/* #endif */
 
-  return printed_len;
-}
+/*   return printed_len; */
+/* } */
 
 
 #ifdef APP_FILLER

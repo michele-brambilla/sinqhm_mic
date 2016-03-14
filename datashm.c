@@ -50,6 +50,7 @@
 #include "datashm.h"
 #include "sinqhm_errors.h"
 
+/* extern "C" { */
 
 /*******************************************************************************
   inlining
@@ -139,7 +140,7 @@ __INLINE void releaseShmHisto(void)
  *
  ******************************************************************************/
 
-__INLINE volatile bank_descr_type* getBankDescription(int bankno)
+__INLINE volatile bank_descr_type* getBankDescription(uint bankno)
 {
 
   volatile histo_descr_type *histo_descr_ptr;
@@ -148,7 +149,9 @@ __INLINE volatile bank_descr_type* getBankDescription(int bankno)
 
   histo_descr_ptr = getShmHistoPtr();
 
-  if(!dataPtr || bankno>dataPtr->nBank || !dataPtr->bank_descr.offs)
+  if(!dataPtr || 
+     bankno>dataPtr->nBank || 
+     !dataPtr->bank_descr.offs)
   {
     return 0;
   }
@@ -182,7 +185,7 @@ __INLINE volatile bank_descr_type* getBankDescription(int bankno)
  *
  ******************************************************************************/
 
-__INLINE volatile axis_descr_type *getAxisDescription(int bankno, int axisno)
+__INLINE volatile axis_descr_type *getAxisDescription(uint bankno, uint axisno)
 {
   volatile bank_descr_type *bank_descr_ptr;
   volatile axis_descr_type *axis_descr_ptr;
@@ -464,4 +467,5 @@ void dataShmFreeAll(void)
 
 /******************************************************************************/
 
+/* } //extern "C"  */
 #endif /* _DATASHM_C_ */

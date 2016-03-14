@@ -22,6 +22,7 @@
 #include <mxml.h> 
 #include "sinqhm_errors.h"
 
+/* extern "C" { */
 
 /*******************************************************************************
   function declarations
@@ -1670,3 +1671,5 @@ pNXDS processData(int bankno, char *command, char *error, int errLen){
   }
   return result;
 }
+
+/* } // extern "C" */

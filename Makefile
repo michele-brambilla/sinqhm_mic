@@ -4,11 +4,16 @@
 
 SHELL = /bin/sh
 
+CC = g++
+CFLAGS = -std=c++11
+CXXFLAGS = -std=c++11
+
 #-------------------------------------------------------------------------------
 # Path to source files
 #-------------------------------------------------------------------------------
 
-SRC_PATH=../../src
+BASE_PATH = /afs/psi.ch/user/b/brambilla_m/work/sinqhm/develop
+SRC_PATH=$(BASE_PATH)/src
 
 
 vpath %.c   $(SRC_PATH)
@@ -54,8 +59,8 @@ APPWEB_VER = 2.4.2
 
 
 APPWEB_DEF = -D_DEBUG  -DLINUX -D_REENTRANT -DAPPWEB_VER_$(subst .,_,$(APPWEB_VER))
-APPWEB_LIB = appWebStatic-$(APPWEB_VER)
-APPWEB_INC = ../../include/appWeb-$(APPWEB_VER)
+APPWEB_LIB = appweb-$(APPWEB_VER)
+APPWEB_INC = $(BASE_PATH)/include/appWeb-$(APPWEB_VER)
 
 
 
@@ -79,17 +84,17 @@ SRV_OBJ = $(SRV_SRC:%.c=$(SRV_DIR)/%.o)  $(SRV_SRC_PP:%.cpp=$(SRV_DIR)/%.o)
 
 SRV_DBG = -g
 
-#-------------------------------------------------------------------------------
-# VME LWL TestGen
-#-------------------------------------------------------------------------------
-
-VLT_SRC = vmelwl.c vme_testgen.c
-
-VLT_DIR = ./vlt
-
-VLT_APP = $(VLT_DIR)/vmetgen
-
-VLT_OBJ = $(VLT_SRC:%.c=$(VLT_DIR)/%.o)
+##-------------------------------------------------------------------------------
+## VME LWL TestGen
+##-------------------------------------------------------------------------------
+#
+#VLT_SRC = vmelwl.c vme_testgen.c
+#
+#VLT_DIR = ./vlt
+#
+#VLT_APP = $(VLT_DIR)/vmetgen
+#
+#VLT_OBJ = $(VLT_SRC:%.c=$(VLT_DIR)/%.o)
 
 
 #-------------------------------------------------------------------------------
@@ -102,7 +107,7 @@ VLT_OBJ = $(VLT_SRC:%.c=$(VLT_DIR)/%.o)
 #---------------------------
 ifeq ($(fil_target),rtai_x86)
 
-APPWEB_LIB = appWebStatic
+APPWEB_LIB = appwebStatic
 
 TARGET_DEFINED = 1
 #
@@ -122,10 +127,10 @@ FIL_FLG = -Wall -Wstrict-prototypes -Wno-trigraphs -O3 -fno-strict-aliasing -fno
 #
 SRV_INC = -I. \
           -I /usr/realtime/include \
-          -I ../../include  -I $(APPWEB_INC)
+          -I $(BASE_PATH)/include  -I $(APPWEB_INC)
 SRV_DEF = -DAPP_SERVER -DARCH_X86 -DFILLER_RTAI $(APPWEB_DEF)
 SRV_FLG =  $(SRV_DBG) -Wall
-SRV_LIB = -L../../lib/x86 -lmxml  -l$(APPWEB_LIB) -lpthread -ldl
+SRV_LIB = -L$(BASE_PATH)/apps/appweb-src-$(APPWEB_VER)/lib  -L$(BASE_PATH)/lib -lmxml  -l$(APPWEB_LIB) -lpthread -ldl
 
 endif
 
@@ -162,8 +167,8 @@ FIL_FLG = -Wall -Wstrict-prototypes -Wno-trigraphs -O4 -fno-strict-aliasing -fno
 SRV_DEF = -DAPP_SERVER -DARCH_PPC -DFILLER_RTAI $(APPWEB_DEF)
 SRV_FLG = $(SRV_DBG) -Wall
 SRV_INC = -I$(ELINOS_PROJECT)/rtai/install/include\
-         -I ../../include -I $(APPWEB_INC)
-SRV_LIB = -L../../lib/ppc -lmxml  -l$(APPWEB_LIB) -static -lpthread -ldl
+         -I $(BASE_PATH)/include -I $(APPWEB_INC)
+SRV_LIB = -L$(BASE_PATH)/apps/appweb-src-$(APPWEB_VER)/lib x-L$(BASE_PATH)/lib/ppc  -lmxml  -l$(APPWEB_LIB) -static -lpthread -ldl
 
 
 # VLT_DEF = -DAPP_SERVER -DARCH_PPC -DFILLER_RTAI $(APPWEB_DEF)
@@ -171,7 +176,7 @@ VLT_FLG = -g -Wall
 
 VLT_INC = -I$(ELINOS_PROJECT)/rtai/install/include \
           -I$(ELINOS_PROJECT)/linux/include \
-          -I ../../include -I $(APPWEB_INC)
+          -I $(BASE_PATH)/include -I $(APPWEB_INC)
 
 #VLT_LIB = -L../lib/ppc  -lpthread -ldl
 
@@ -184,7 +189,7 @@ endif
 ifeq ($(fil_target),user_x86)
 
 TARGET_DEFINED = 1
-APPWEB_LIB = appWebStatic
+APPWEB_LIB = appwebStatic
 
 #
 # (Non-)Realtime Application
@@ -193,21 +198,21 @@ APPWEB_LIB = appWebStatic
 FIL_APP = $(FIL_DIR)/sinqhm_filler
 
 FIL_INC = -I. \
-         -I ../../include  -I $(APPWEB_INC)
+         -I $(BASE_PATH)/include  -I $(APPWEB_INC)
 FIL_DEF = -DAPP_FILLER -DARCH_X86 -DFILLER_USER $(APPWEB_DEF)
 FIL_FLG =  $(SRV_DBG) -Wall
 
-RA_LIB = -L../lib/x86 -lmxml  -lappWebStatic -lpthread -ldl
+RA_LIB = -L../lib -lmxml  -lappwebStatic -lpthread -ldl
 
 
 #
 # Server Application
 #
 SRV_INC = -I. \
-         -I ../../include  -I $(APPWEB_INC)
+         -I $(BASE_PATH)/include  -I $(APPWEB_INC)
 SRV_DEF = -DAPP_SERVER -DARCH_X86 -DFILLER_USER $(APPWEB_DEF)
 SRV_FLG =  $(SRV_DBG) -Wall
-SRV_LIB = -L../../lib/x86 -lmxml  -l$(APPWEB_LIB) -lpthread -ldl
+SRV_LIB =  -L$(BASE_PATH)/apps/appweb-src-$(APPWEB_VER)/lib -L$(BASE_PATH)/lib  -lmxml  -l$(APPWEB_LIB) -lpthread -ldl
 # SRV_LIB = -L../lib/x86 -lmxml  -lappWebStatic -lstdc++ -lpthread -ldl
 
 endif
@@ -233,7 +238,7 @@ endif
 #
 ################################################################################
 
-all:  $(FIL_APP) $(SRV_APP) $(VLT_APP) install 
+all:  $(FIL_APP) $(SRV_APP) $(VLT_APP)
 #  clean
 
 vmelwl:  $(VLT_APP)
@@ -250,11 +255,11 @@ clean:
 .PHONY : install
 
 install: $(FIL_APP) $(SRV_APP) $(VLT_APP)
-	-cp $(FIL_APP) ../../distrib/sinqhm
-	-cp $(SRV_APP) ../../distrib/sinqhm
-	-cp $(VLT_APP) ../../distrib/sinqhm
-	ppc_60x-strip ../../distrib/sinqhm/sinqhmegi
-	ppc_60x-strip ../../distrib/sinqhm/vmetgen
+	-cp $(FIL_APP) $(BASE_PATH)/distrib/sinqhm
+	-cp $(SRV_APP) $(BASE_PATH)/distrib/sinqhm
+	-cp $(VLT_APP) $(BASE_PATH)/distrib/sinqhm
+	ppc_60x-strip $(BASE_PATH)/distrib/sinqhm/sinqhmegi
+	ppc_60x-strip $(BASE_PATH)/distrib/sinqhm/vmetgen
 
 ifeq "$(fil_target)" "rtai_ppc"
 #	-cp -r ../distrib/server   /tftpboot/nfs/home/theidel
