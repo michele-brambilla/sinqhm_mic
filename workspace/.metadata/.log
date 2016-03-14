@@ -1,0 +1,50 @@
+!SESSION 2012-08-29 11:22:40.070 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.6.0_24
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86 -clean
+
+!ENTRY org.eclipse.ui.workbench 2 0 2012-08-29 11:23:16.914
+!MESSAGE A handler conflict occurred.  This may disable some commands.
+!SUBENTRY 1 org.eclipse.ui.workbench 2 0 2012-08-29 11:23:16.914
+!MESSAGE Conflict for 'AUTOGEN:::mountaingumui.GraphActions/ch.psi.num.mountaingum.ui.GraphicsView.PrintAction':
+HandlerActivation(commandId=AUTOGEN:::mountaingumui.GraphActions/ch.psi.num.mountaingum.ui.GraphicsView.PrintAction,
+	handler=ActionDelegateHandlerProxy(null,ch.psi.num.mountaingum.ui.GraphicsView.PrintAction),
+	expression=AndExpression(ActionSetExpression(mountaingumui.GraphActions,org.eclipse.ui.internal.WorkbenchWindow@d964af),WorkbenchWindowExpression(org.eclipse.ui.internal.WorkbenchWindow@d964af)),sourcePriority=16640)
+HandlerActivation(commandId=AUTOGEN:::mountaingumui.GraphActions/ch.psi.num.mountaingum.ui.GraphicsView.PrintAction,
+	handler=ActionDelegateHandlerProxy(null,ch.psi.num.mountaingum.ui.GraphicsView.PrintAction),
+	expression=AndExpression(ActionSetExpression(mountaingumui.GraphActions,org.eclipse.ui.internal.WorkbenchWindow@d964af),WorkbenchWindowExpression(org.eclipse.ui.internal.WorkbenchWindow@d964af)),sourcePriority=16640)
+!SUBENTRY 1 org.eclipse.ui.workbench 2 0 2012-08-29 11:23:16.914
+!MESSAGE Conflict for 'AUTOGEN:::mountaingumui.GraphActions/ch.psi.num.mountaingum.ui.GraphicsView.HardcopyAction':
+HandlerActivation(commandId=AUTOGEN:::mountaingumui.GraphActions/ch.psi.num.mountaingum.ui.GraphicsView.HardcopyAction,
+	handler=ActionDelegateHandlerProxy(null,ch.psi.num.mountaingum.ui.GraphicsView.HardcopyAction),
+	expression=AndExpression(ActionSetExpression(mountaingumui.GraphActions,org.eclipse.ui.internal.WorkbenchWindow@d964af),WorkbenchWindowExpression(org.eclipse.ui.internal.WorkbenchWindow@d964af)),sourcePriority=16640)
+HandlerActivation(commandId=AUTOGEN:::mountaingumui.GraphActions/ch.psi.num.mountaingum.ui.GraphicsView.HardcopyAction,
+	handler=ActionDelegateHandlerProxy(null,ch.psi.num.mountaingum.ui.GraphicsView.HardcopyAction),
+	expression=AndExpression(ActionSetExpression(mountaingumui.GraphActions,org.eclipse.ui.internal.WorkbenchWindow@d964af),WorkbenchWindowExpression(org.eclipse.ui.internal.WorkbenchWindow@d964af)),sourcePriority=16640)
+!SESSION 2013-04-26 15:41:47.006 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.6.0_24
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86 -clean
+
+!ENTRY org.eclipse.ui.workbench 2 0 2013-04-26 15:42:13.675
+!MESSAGE A handler conflict occurred.  This may disable some commands.
+!SUBENTRY 1 org.eclipse.ui.workbench 2 0 2013-04-26 15:42:13.675
+!MESSAGE Conflict for 'AUTOGEN:::mountaingumui.GraphActions/ch.psi.num.mountaingum.ui.GraphicsView.PrintAction':
+HandlerActivation(commandId=AUTOGEN:::mountaingumui.GraphActions/ch.psi.num.mountaingum.ui.GraphicsView.PrintAction,
+	handler=ActionDelegateHandlerProxy(null,ch.psi.num.mountaingum.ui.GraphicsView.PrintAction),
+	expression=AndExpression(ActionSetExpression(mountaingumui.GraphActions,org.eclipse.ui.internal.WorkbenchWindow@f429d7),WorkbenchWindowExpression(org.eclipse.ui.internal.WorkbenchWindow@f429d7)),sourcePriority=16640)
+HandlerActivation(commandId=AUTOGEN:::mountaingumui.GraphActions/ch.psi.num.mountaingum.ui.GraphicsView.PrintAction,
+	handler=ActionDelegateHandlerProxy(null,ch.psi.num.mountaingum.ui.GraphicsView.PrintAction),
+	expression=AndExpression(ActionSetExpression(mountaingumui.GraphActions,org.eclipse.ui.internal.WorkbenchWindow@f429d7),WorkbenchWindowExpression(org.eclipse.ui.internal.WorkbenchWindow@f429d7)),sourcePriority=16640)
+!SUBENTRY 1 org.eclipse.ui.workbench 2 0 2013-04-26 15:42:13.675
+!MESSAGE Conflict for 'AUTOGEN:::mountaingumui.GraphActions/ch.psi.num.mountaingum.ui.GraphicsView.HardcopyAction':
+HandlerActivation(commandId=AUTOGEN:::mountaingumui.GraphActions/ch.psi.num.mountaingum.ui.GraphicsView.HardcopyAction,
+	handler=ActionDelegateHandlerProxy(null,ch.psi.num.mountaingum.ui.GraphicsView.HardcopyAction),
+	expression=AndExpression(ActionSetExpression(mountaingumui.GraphActions,org.eclipse.ui.internal.WorkbenchWindow@f429d7),WorkbenchWindowExpression(org.eclipse.ui.internal.WorkbenchWindow@f429d7)),sourcePriority=16640)
+HandlerActivation(commandId=AUTOGEN:::mountaingumui.GraphActions/ch.psi.num.mountaingum.ui.GraphicsView.HardcopyAction,
+	handler=ActionDelegateHandlerProxy(null,ch.psi.num.mountaingum.ui.GraphicsView.HardcopyAction),
+	expression=AndExpression(ActionSetExpression(mountaingumui.GraphActions,org.eclipse.ui.internal.WorkbenchWindow@f429d7),WorkbenchWindowExpression(org.eclipse.ui.internal.WorkbenchWindow@f429d7)),sourcePriority=16640)
