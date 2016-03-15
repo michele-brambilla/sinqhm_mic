@@ -2749,6 +2749,9 @@ static void showConfigEgi(MaRequest *rq, char *script, char *uri, char *query,
       case FILLERSANS2:
         strcpy(buffer,"Sans2-PSD Filler");
         break;
+      case FILLER0MQ:
+        strcpy(buffer,"0MQ Filler");
+        break;
 
       default:
         snprintf(buffer,255,"Unknown filler ID %d",filler);

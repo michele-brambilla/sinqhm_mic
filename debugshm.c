@@ -76,13 +76,13 @@ __INLINE int initShmDebug(void)
   debugBuffPtr = (volatile unsigned int*) sinqhm_shm_malloc(SHM_KEY_DEBUG_BUFF, &debugID, dbg_size);
 
   if(debugBuffPtr == NULL)
-  {
-    return SINQHM_ERR_ALLOCFAIL;
-  }
+    {
+      return SINQHM_ERR_ALLOCFAIL;
+    }
   else
-  {
-    return 0;
-  }
+    {
+      return 0;
+    }
 }
 
 
@@ -96,10 +96,10 @@ __INLINE int initShmDebug(void)
 __INLINE void releaseShmDebug(void)
 {
   if (debugBuffPtr)
-  {
-    sinqhm_shm_free(SHM_KEY_DEBUG_BUFF, debugID, (void*)debugBuffPtr);
-    debugBuffPtr=NULL;
-  }
+    {
+      sinqhm_shm_free(SHM_KEY_DEBUG_BUFF, debugID, (void*)debugBuffPtr);
+      debugBuffPtr=NULL;
+    }
 }
 
 
@@ -188,13 +188,13 @@ __INLINE volatile unsigned int *getDebugBuffPtr(void)
 void init_dbg_print_buff(void)
 {
   if(shm_dbg_ptr)
-  {
-    shm_dbg_ptr[DBG_FIL_CHAR_BUFF_START] = 0;
-    shm_dbg_ptr[DBG_FIL_BUFF_SIZE]       = dbg_size;
-    shm_dbg_ptr[DBG_FIL_STR_PTR]         = DBG_FIL_CHAR_BUFF_START<<2;
-    shm_dbg_ptr[DBG_FIL_WRAP_AROUND]     = 0;
-    shm_dbg_ptr[DBG_FIL_LOG_NUMBER]      = 0;
-  }
+    {
+      shm_dbg_ptr[DBG_FIL_CHAR_BUFF_START] = 0;
+      shm_dbg_ptr[DBG_FIL_BUFF_SIZE]       = dbg_size;
+      shm_dbg_ptr[DBG_FIL_STR_PTR]         = DBG_FIL_CHAR_BUFF_START<<2;
+      shm_dbg_ptr[DBG_FIL_WRAP_AROUND]     = 0;
+      shm_dbg_ptr[DBG_FIL_LOG_NUMBER]      = 0;
+    }
 }
 
 
@@ -216,22 +216,22 @@ void set_error_msg(char *buff, int len)
   err_buff_char_ptr = (char*)&shm_dbg_ptr[DBG_FIL_ERR_BUFF_START];
 
   if (shm_dbg_ptr[DBG_FIL_ERR_BUFF_SGN] == shm_dbg_ptr[DBG_SRV_ERR_BUFF_ACK])
-  {
-    // clear Error Buff;
-    shm_dbg_ptr[DBG_FIL_ERR_BUFF_PTR] = 0;
-    shm_dbg_ptr[DBG_FIL_ERR_BUFF_SGN]++;
-    err_buff_char_ptr[0]=0;
-  }
+    {
+      // clear Error Buff;
+      shm_dbg_ptr[DBG_FIL_ERR_BUFF_PTR] = 0;
+      shm_dbg_ptr[DBG_FIL_ERR_BUFF_SGN]++;
+      err_buff_char_ptr[0]=0;
+    }
   bytes_free = shm_dbg_ptr[DBG_FIL_ERR_BUFF_SIZE]-shm_dbg_ptr[DBG_FIL_ERR_BUFF_PTR]-1;
 
   if (bytes_free <=0) return;
 
   count = my_min_int(len,bytes_free);
   if (count > 0)
-  {
-    memcpy(&err_buff_char_ptr[shm_dbg_ptr[DBG_FIL_ERR_BUFF_PTR]],buff,count);
-    shm_dbg_ptr[DBG_FIL_ERR_BUFF_PTR]+=count;
-  }
+    {
+      memcpy(&err_buff_char_ptr[shm_dbg_ptr[DBG_FIL_ERR_BUFF_PTR]],buff,count);
+      shm_dbg_ptr[DBG_FIL_ERR_BUFF_PTR]+=count;
+    }
 
   err_buff_char_ptr[shm_dbg_ptr[DBG_FIL_ERR_BUFF_PTR]]=0;
 }
@@ -262,35 +262,35 @@ int set_debug_msg(char *buff, int len)
   todo    = len;
 
   do
-  {
-    buff_free_bytes = shm_dbg_ptr[DBG_FIL_BUFF_SIZE]-1-shm_dbg_ptr[DBG_FIL_STR_PTR];
-    count = my_min_int(todo,buff_free_bytes);
-    if (count > 0)
     {
-      memcpy(&shm_dbg_char_ptr[shm_dbg_ptr[DBG_FIL_STR_PTR]],src_ptr,count);
-      todo -=count;
-      shm_dbg_ptr[DBG_FIL_STR_PTR]+=count;
-    }
-    if ((!shm_dbg_ptr[DBG_SRV_CHAR_BUFF_ONCE]) && (shm_dbg_ptr[DBG_FIL_STR_PTR]>=(shm_dbg_ptr[DBG_FIL_BUFF_SIZE]-1)))
-    {
-      shm_dbg_char_ptr[shm_dbg_ptr[DBG_FIL_BUFF_SIZE]-1] = 0;
-      shm_dbg_ptr[DBG_FIL_STR_PTR] = DBG_FIL_CHAR_BUFF_START<<2;
+      buff_free_bytes = shm_dbg_ptr[DBG_FIL_BUFF_SIZE]-1-shm_dbg_ptr[DBG_FIL_STR_PTR];
+      count = my_min_int(todo,buff_free_bytes);
+      if (count > 0)
+        {
+          memcpy(&shm_dbg_char_ptr[shm_dbg_ptr[DBG_FIL_STR_PTR]],src_ptr,count);
+          todo -=count;
+          shm_dbg_ptr[DBG_FIL_STR_PTR]+=count;
+        }
+      if ((!shm_dbg_ptr[DBG_SRV_CHAR_BUFF_ONCE]) && (shm_dbg_ptr[DBG_FIL_STR_PTR]>=(shm_dbg_ptr[DBG_FIL_BUFF_SIZE]-1)))
+        {
+          shm_dbg_char_ptr[shm_dbg_ptr[DBG_FIL_BUFF_SIZE]-1] = 0;
+          shm_dbg_ptr[DBG_FIL_STR_PTR] = DBG_FIL_CHAR_BUFF_START<<2;
 
-      temp_uint32 = shm_dbg_ptr[DBG_FIL_WRAP_AROUND]+1;
-      if (temp_uint32) shm_dbg_ptr[DBG_FIL_WRAP_AROUND]=temp_uint32;
+          temp_uint32 = shm_dbg_ptr[DBG_FIL_WRAP_AROUND]+1;
+          if (temp_uint32) shm_dbg_ptr[DBG_FIL_WRAP_AROUND]=temp_uint32;
+        }
+      src_ptr+=count;
     }
-    src_ptr+=count;
-  }
   while (todo >0 && (shm_dbg_ptr[DBG_FIL_STR_PTR]<(shm_dbg_ptr[DBG_FIL_BUFF_SIZE]-1)) );
 
   if (!(shm_dbg_ptr[DBG_FIL_WRAP_AROUND]))
-  {
-    shm_dbg_char_ptr[shm_dbg_ptr[DBG_FIL_STR_PTR]]=0;
-  }
+    {
+      shm_dbg_char_ptr[shm_dbg_ptr[DBG_FIL_STR_PTR]]=0;
+    }
   else
-  {
-    shm_dbg_char_ptr[shm_dbg_ptr[DBG_FIL_STR_PTR]]=13;
-  }
+    {
+      shm_dbg_char_ptr[shm_dbg_ptr[DBG_FIL_STR_PTR]]=13;
+    }
   
   return len-todo;
 
@@ -332,10 +332,10 @@ int dbg_printf(int level, const char *fmt, ...)
   va_end(args);
 
   if (level == DBGMSG_ERROR)
-  {
-    set_error_msg(time_buf,time_len);
-    set_error_msg(temp_buf,printed_len);
-  }
+    {
+      set_error_msg(time_buf,time_len);
+      set_error_msg(temp_buf,printed_len);
+    }
 
   
   if (level>shm_dbg_ptr[DBG_SRV_MSG_LEVEL]) return 0;
@@ -344,20 +344,20 @@ int dbg_printf(int level, const char *fmt, ...)
   total_len += set_debug_msg(time_buf,time_len);
 
   if (level == DBGMSG_ERROR)
-  {
-    html_len = snprintf(html_buf, 100, "<span class=\"DBGMSG_ERROR\">ERROR: ");
-    total_len += set_debug_msg(html_buf,html_len);
-  }
+    {
+      html_len = snprintf(html_buf, 100, "<span class=\"DBGMSG_ERROR\">ERROR: ");
+      total_len += set_debug_msg(html_buf,html_len);
+    }
   else if (level == DBGMSG_WARNING)
-  {
-    html_len = snprintf(html_buf, 100, "<span class=\"DBGMSG_WARNING\">WARNING: ");
-    total_len += set_debug_msg(html_buf,html_len);
-  }
+    {
+      html_len = snprintf(html_buf, 100, "<span class=\"DBGMSG_WARNING\">WARNING: ");
+      total_len += set_debug_msg(html_buf,html_len);
+    }
   else
-  {
-    html_len = snprintf(html_buf, 100, "<span class=\"DBGMSG_INFO\">");
-    total_len += set_debug_msg(html_buf,html_len);
-  }
+    {
+      html_len = snprintf(html_buf, 100, "<span class=\"DBGMSG_INFO\">");
+      total_len += set_debug_msg(html_buf,html_len);
+    }
 
   total_len += set_debug_msg(temp_buf,printed_len);
 
@@ -393,10 +393,10 @@ void print_array(int level, volatile uint32* arrayptr)
 
   length = 1;
   for(i = 0; i < rank; i++)
-  {
-    PPRINT(PPBUFF,"%d ",arrayptr[i+1]);
-	  length *= arrayptr[i+1];
-  }
+    {
+      PPRINT(PPBUFF,"%d ",arrayptr[i+1]);
+      length *= arrayptr[i+1];
+    }
 	  
   PPRINT(PPBUFF,"]\n");
   dbg_printf(level, buffer);
@@ -406,16 +406,16 @@ void print_array(int level, volatile uint32* arrayptr)
 
   count = 0;
   for(i = 0; i  < length; i++)
-  {
-    PPRINT(PPBUFF,"%d ",arrayptr[1+rank+i]);
-    count++;
-    if((count >= 10) || (i==(length -1)))
     {
-      dbg_printf(level,"%s\n",buffer);
-      printed_len=0;
-      count = 0;
+      PPRINT(PPBUFF,"%d ",arrayptr[1+rank+i]);
+      count++;
+      if((count >= 10) || (i==(length -1)))
+        {
+          dbg_printf(level,"%s\n",buffer);
+          printed_len=0;
+          count = 0;
+        }
     }
-  }
 }
 
 
@@ -452,14 +452,14 @@ void print_config(void)
   histo_descr_ptr = getShmHistoPtr();
 
   if(!histo_descr_ptr)
-  {
-    dbg_printf(DBGMSG_ERROR, "print_config(): can not get data pointer\n");
-  }
+    {
+      dbg_printf(DBGMSG_ERROR, "print_config(): can not get data pointer\n");
+    }
 
   filler=histo_descr_ptr->histo_type;
 
   switch(filler)
-  {
+    {
     case FILLERTOF:
       strcpy(buffer,"Time-Of-Flight");
       break;
@@ -477,69 +477,76 @@ void print_config(void)
       break;
     case FILLERSANS2:
       strcpy(buffer,"Sans2-PSD Filler");
-      break;    default:
+      break;    
+      ///////////
+      // MiB
+    case FILLER0MQ:
+      strcpy(buffer,"0MQ Filler");
+      break;
+
+    default:
       snprintf(buffer,255,"Unknown filler ID %d",filler);
       break;
-  }
+    }
 
   dbg_printf(DBGMSG_INFO3, "Filler Type: %s (ID=%d)\n",buffer,filler);
 
   if (histo_descr_ptr->bank_mapping_array.offs)
-  {
-    bmap_arraydesc_ptr = (uint32*)dataShmOffsToPtr(histo_descr_ptr->bank_mapping_array.offs);
-    dbg_printf(DBGMSG_INFO4, "Bank Mapping Array:\n");
-    print_array(DBGMSG_INFO4, bmap_arraydesc_ptr);
-  }
+    {
+      bmap_arraydesc_ptr = (uint32*)dataShmOffsToPtr(histo_descr_ptr->bank_mapping_array.offs);
+      dbg_printf(DBGMSG_INFO4, "Bank Mapping Array:\n");
+      print_array(DBGMSG_INFO4, bmap_arraydesc_ptr);
+    }
 
   nbank = histo_descr_ptr->nBank;
   for(bank = 0; bank < nbank; bank++)
-  {
-    bank_descr_ptr = getBankDescription(bank);
-    naxis = bank_descr_ptr->rank;
-    dbg_printf(DBGMSG_INFO3, "Bank %d: rank=%d\n",bank ,naxis);
-
-    for(axis = 0; axis < naxis; axis++)
     {
-      axis_descr_ptr = getAxisDescription(bank, axis);
-      length = axis_descr_ptr->length;
-      mapping = axis_descr_ptr->type;
+      bank_descr_ptr = getBankDescription(bank);
+      naxis = bank_descr_ptr->rank;
+      dbg_printf(DBGMSG_INFO3, "Bank %d: rank=%d\n",bank ,naxis);
 
-      dbg_printf(DBGMSG_INFO3, "Axis %d: length=%d\n", axis,length);
+      for(axis = 0; axis < naxis; axis++)
+        {
+          axis_descr_ptr = getAxisDescription(bank, axis);
+          length = axis_descr_ptr->length;
+          mapping = axis_descr_ptr->type;
 
-      axisData_ptr = getAxisData(axis_descr_ptr);
-      switch(mapping)
-      {
-        case AXDIRECT:
-          dbg_printf(DBGMSG_INFO3, "Mapping: Direct (ID=%d)\n",mapping);
-          break;
+          dbg_printf(DBGMSG_INFO3, "Axis %d: length=%d\n", axis,length);
 
-        case AXCALC:
-          dbg_printf(DBGMSG_INFO3, "Mapping: Calculation (ID=%d)\n",mapping);
-          if(axisData_ptr != NULL)
-          {
-            dbg_printf(DBGMSG_INFO3, "Multiplier  : %d\n", axisData_ptr[0]);
-            dbg_printf(DBGMSG_INFO3, "PreOffset   : %d\n", axisData_ptr[1]);
-            dbg_printf(DBGMSG_INFO3, "Divisor     : %d\n", axisData_ptr[2]);
-            dbg_printf(DBGMSG_INFO3, "PostOffset  : %d\n", axisData_ptr[3]);
-          }
-          break;
+          axisData_ptr = getAxisData(axis_descr_ptr);
+          switch(mapping)
+            {
+            case AXDIRECT:
+              dbg_printf(DBGMSG_INFO3, "Mapping: Direct (ID=%d)\n",mapping);
+              break;
 
-        case AXBOUNDARY:
-          dbg_printf(DBGMSG_INFO4, "Mapping: Boundary Array (ID=%d)\n",mapping);
-          print_array(DBGMSG_INFO4, axisData_ptr);
+            case AXCALC:
+              dbg_printf(DBGMSG_INFO3, "Mapping: Calculation (ID=%d)\n",mapping);
+              if(axisData_ptr != NULL)
+                {
+                  dbg_printf(DBGMSG_INFO3, "Multiplier  : %d\n", axisData_ptr[0]);
+                  dbg_printf(DBGMSG_INFO3, "PreOffset   : %d\n", axisData_ptr[1]);
+                  dbg_printf(DBGMSG_INFO3, "Divisor     : %d\n", axisData_ptr[2]);
+                  dbg_printf(DBGMSG_INFO3, "PostOffset  : %d\n", axisData_ptr[3]);
+                }
+              break;
 
-          break;
-        case AXLOOKUP:
-          dbg_printf(DBGMSG_INFO4, "Mapping: Lookup Table (ID=%d)\n",mapping);
-          print_array(DBGMSG_INFO4, axisData_ptr);
+            case AXBOUNDARY:
+              dbg_printf(DBGMSG_INFO4, "Mapping: Boundary Array (ID=%d)\n",mapping);
+              print_array(DBGMSG_INFO4, axisData_ptr);
 
-          break;
-        default:
-          dbg_printf(DBGMSG_INFO3, "Mapping: Unknown (ID=%d)\n",mapping);
-          break;
-      }
+              break;
+            case AXLOOKUP:
+              dbg_printf(DBGMSG_INFO4, "Mapping: Lookup Table (ID=%d)\n",mapping);
+              print_array(DBGMSG_INFO4, axisData_ptr);
+
+              break;
+            default:
+              dbg_printf(DBGMSG_INFO3, "Mapping: Unknown (ID=%d)\n",mapping);
+              break;
+            }
+        }
     }
-  }
 }
 
 
@@ -562,13 +569,13 @@ void print_config(void)
 int print_lwl_status (unsigned int status)
 {
   dbg_printf(DBGMSG_INFO3, "LWL_Status [0x%02x] : %s %s %s %s %s %s %s\n",status,
-    ((status & LWL_STATUS_PF)   ? "PF " : "   "),
-    ((status & LWL_STATUS_SWC)  ? "SWC" : "   "),
-    ((status & LWL_STATUS_NRL)  ? "NRL" : "   "),
-    ((status & LWL_STATUS_VLNT) ? "ERR" : "   "),
-    ((status & LWL_STATUS_FF)   ? "FF " : "   "),
-    ((status & LWL_STATUS_HF)   ? "HF " : "   "),
-    ((status & LWL_STATUS_EF)   ? "EF " : "   "));
+             ((status & LWL_STATUS_PF)   ? "PF " : "   "),
+             ((status & LWL_STATUS_SWC)  ? "SWC" : "   "),
+             ((status & LWL_STATUS_NRL)  ? "NRL" : "   "),
+             ((status & LWL_STATUS_VLNT) ? "ERR" : "   "),
+             ((status & LWL_STATUS_FF)   ? "FF " : "   "),
+             ((status & LWL_STATUS_HF)   ? "HF " : "   "),
+             ((status & LWL_STATUS_EF)   ? "EF " : "   "));
 
   return 0;
 }
@@ -601,9 +608,9 @@ void print_packet(packet_type *p)
   printed_len += snprintf(&buff[printed_len], 256-printed_len, "Packet found (len=%2d): 0x%08x", p->length,p->data[0]);
 
   for (i=1; ((i < p->length) && (i < MAX_PACKET_LENGTH));i++)
-  {
-    printed_len += snprintf(&buff[printed_len], 256-printed_len, " 0x%04x", p->data[i]);
-  }
+    {
+      printed_len += snprintf(&buff[printed_len], 256-printed_len, " 0x%04x", p->data[i]);
+    }
   printed_len += snprintf(&buff[printed_len], 256-printed_len, "\n");
   dbg_printf(DBGMSG_INFO5,buff);
 }

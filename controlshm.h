@@ -70,6 +70,7 @@ extern "C" {
 #define FILLERTOFMAP   3 
 #define FILLERHRPT     4
 #define FILLERSANS2    5
+#define FILLER0MQ      6   //MiB
 
 /**
  * layout of config and status section

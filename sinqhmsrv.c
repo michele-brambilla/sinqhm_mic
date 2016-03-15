@@ -442,6 +442,10 @@ int parseConfiguration(histo_descr_type *pHM, mxml_node_t *root)
   {
     pHM->histo_type = FILLERSANS2;
   }
+  else if(strcmp(filler,"0mq") == 0) // MiB
+  {
+    pHM->histo_type = FILLER0MQ;
+  }
   else
   {
     return FILLERUNKNOWN;
