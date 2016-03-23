@@ -126,17 +126,20 @@ int main(int argc, char** argv)
    *  Configure the server based on the directives in 
    *  simpleEgi.conf.
    */
-  if (maConfigureServer(mainServer, "sinqhmegi.conf") < 0) 
+  if (maConfigureServer(mainServer, "sinqhmegi.conf") < 0)
   {
-    fprintf(stderr, 
-      "Can't configure the server. Error on line %d\n", 
+    fprintf(stderr,
+      "Can't configure the server. Error on line %d\n",
       maGetConfigErrorLine(mainServer));
     exit(2);
   }
 
+  printf("%p\n",getShmHistoPtr());
+
   /**
    * initialize the SINQHM system
    */
+  printf("initializeSINQHM()\n");
   if(initializeSINQHM() < 0) 
   {
 //    perror("sinqhmegi");
@@ -145,6 +148,9 @@ int main(int argc, char** argv)
     closeSINQHM();
     exit(1);
   }
+
+  printf("%p\n",getShmHistoPtr());
+
 
   signal(SIGTERM,sinqhmegiSignal);
   signal(SIGINT,sinqhmegiSignal);
@@ -157,6 +163,14 @@ int main(int argc, char** argv)
     fprintf(stderr, "Can't start the server\n");
     exit(2);
   }
+
+  histo_descr_type* t=getShmHistoPtr();
+  printf("=================================\n");
+  printf("= ID: %d \t\t\t=\n",t->id);
+  printf("= Version: %d \t\t\t=\n",t->version);
+  printf("= Server valid: %p \t=\n",t->server_valid);
+  printf("= Filler valid: %d\t\t=\n",t->filler_valid);
+  printf("=================================\n");
 
   /*
    *  Service events. This call will block until the server is exited

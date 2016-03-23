@@ -2927,7 +2927,6 @@ int initializeSINQHM(void)
   status = initShmControl();
   if(status < 0) return status;
 
-
   getControlVar(CFG_FIL_CFG_VALID,&cfg_valid);
   if (cfg_valid != CFG_VALID)
   {
@@ -2964,8 +2963,8 @@ int initializeSINQHM(void)
 // check if filler is configured ...
 
   histo_descr_ptr = getShmHistoPtr();
-  printf("histo_descr_ptr->server_valid=0x%08x\n",histo_descr_ptr->server_valid);
-  printf("histo_descr_ptr->filler_valid=0x%08x\n",histo_descr_ptr->filler_valid);
+  printf("histo_descr_ptr->server_valid=0x%p\n",histo_descr_ptr->server_valid);
+  printf("histo_descr_ptr->filler_valid=0x%p\n",histo_descr_ptr->filler_valid);
   if (    (histo_descr_ptr->server_valid == DATASHM_CFG_SRV_VALID)
        && (histo_descr_ptr->filler_valid == DATASHM_CFG_FIL_VALID))
   {
@@ -2988,6 +2987,8 @@ int initializeSINQHM(void)
       mprTrace(1,"%s\n",buffer);
 //      exit(1);
     }
+
+
   }
 
 /*

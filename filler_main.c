@@ -34,6 +34,8 @@
 #include "sinqhm_types.h"
 #include "sinqhm_errors.h"
 
+#include "zeromq.h"
+
 
 /*******************************************************************************
   kernel module defines
@@ -111,6 +113,9 @@ volatile histo_descr_type *shm_histo_ptr = NULL;
 extern volatile unsigned int *shm_dbg_ptr;
 extern volatile lwl_pmc_val_type *pmc_base_ptr;
 
+static int32 memory_size;
+
+
 /*******************************************************************************
   kernel module parameters
 *******************************************************************************/
@@ -135,6 +140,9 @@ MODULE_PARM (rt_duty_cycle, "i");
 
 static void periodic_rt_task(int t);
 void daq_loop(void);
+/////////
+// MiB
+void daq_loop_0mq(void);
 void config_loop(void);
 
 
@@ -335,8 +343,17 @@ void config_loop(void)
     empty=0;
     tcheck=0;
 
+    ///////////////
+    // MiB
+    /* printf("\n"); */
+    /* printf("shm_cfg_ptr[CFG_SRV_DO_CFG_CMD] = %d\n",shm_cfg_ptr[CFG_SRV_DO_CFG_CMD]); */
+    /* printf("shm_cfg_ptr[CFG_FIL_DO_CFG_ACK] = %d\n",shm_cfg_ptr[CFG_FIL_DO_CFG_ACK]); */
+    //    shm_cfg_ptr[CFG_SRV_DO_CFG_CMD] = 1;
     if (shm_cfg_ptr[CFG_SRV_DO_CFG_CMD] && !shm_cfg_ptr[CFG_FIL_DO_CFG_ACK])
     {
+      ///////////////
+      // MiB
+      //      printf("shm_cfg_ptr[CFG_SRV_DO_CFG_CMD] && !shm_cfg_ptr[CFG_FIL_DO_CFG_ACK]\n");
       status = process_construct();
       shm_cfg_ptr[CFG_FIL_CFG_STATUS] = status;
       shm_cfg_ptr[CFG_FIL_DO_CFG_ACK] = 1;
@@ -349,16 +366,25 @@ void config_loop(void)
     }
 
 
-// CFG_SRV_DO_DAQ_CMD
-
+    // CFG_SRV_DO_DAQ_CMD
     if (shm_histo_ptr->filler_valid == DATASHM_CFG_FIL_VALID)
     {
+      /* printf ("shm_histo_ptr->filler_valid -> %p\n",shm_histo_ptr->filler_valid); */
+      /* printf ("shm_cfg_ptr[CFG_SRV_DO_DAQ_CMD] = %d\n",shm_cfg_ptr[CFG_SRV_DO_DAQ_CMD]); */
+      /* printf ("shm_cfg_ptr[CFG_FIL_DO_CFG_ACK] = %d\n",shm_cfg_ptr[CFG_FIL_DO_CFG_ACK]); */
+
       if (shm_cfg_ptr[CFG_SRV_DO_DAQ_CMD] && shm_cfg_ptr[CFG_FIL_DO_CFG_ACK])
       {
         shm_cfg_ptr[CFG_FIL_DO_DAQ_ACK] = 1;
 
-        daq_loop();
 
+        printf ("daq loop\n");
+        if(shm_histo_ptr->histo_type == FILLER0MQ) {
+          printf("zeromq_filler\n");
+          daq_loop_0mq();
+        }
+        else
+          daq_loop();
 
         dbg_printf(DBGMSG_INFO2, "config_loop(): Entering Config Loop\n");
         shm_cfg_ptr[CFG_FIL_FILLER_STATE]=FILLER_STATE_CONFIG_LOOP;
@@ -563,6 +589,58 @@ void daq_loop(void)
 /******************************************************************************/
 
 
+
+
+
+void daq_loop_0mq() {
+  packet_type packet; 
+  unsigned long time1,time2;
+  unsigned long msr;
+  int empty,tcheck;
+
+  dbg_printf(DBGMSG_INFO2, "daq_loop(): Entering DAQ Loop 0MQ\n");
+  
+  shm_cfg_ptr[CFG_FIL_FILLER_STATE]=FILLER_STATE_DAQ_LOOP;
+
+  init_daq_start(&packet);
+
+  
+  while (shm_cfg_ptr[CFG_SRV_DO_DAQ_CMD]) {
+    empty=0;
+    tcheck=0;
+    
+    msr = disable_interrupts();
+      
+    //    tic_read(time1);
+
+    zmqReceive(&packet);
+    
+    /* process_packet_fcn(p); */
+    
+    printf("process_packet_fcn(&packet): %p\n",process_packet_fcn);
+
+  } // while shm_cfg_ptr[CFG_SRV_DO_DAQ_CMD]
+
+  leave_daq_loop();
+
+}
+
+
+/**************************************************************/
+/**************************************************************/
+/**************************************************************/
+
+
+
+
+
+
+
+
+
+
+
+
 int init_filler(void)
 {
   struct timeval tv;
@@ -653,8 +731,24 @@ int init_filler(void)
   do_gettimeofday(&tv);
   shm_cfg_ptr[CFG_FIL_MOD_INST_TIME]   = tv.tv_sec;
 
+
+  ///////////////////
+  // MiB
+  // here init 0mq connection if getShmHistoPtr()->histo_type == FILLER0MQ? 
+  printf("\tgetShmHistoPtr()->histo_type = %d\n",getShmHistoPtr()->histo_type);
+
+  int (*init_func)(void);
+  init_func = &pmc_module_init;
+  int (*init_func1)(void);
+  init_func1 = &zeromq_init;
+
   // initialize LWL PMC module and PCI Bridges
-  if (pmc_module_init() != 0)
+  //  if (pmc_module_init() != 0)
+  if ( (*init_func)() != 0)
+  {
+    return (-ENXIO);
+  }
+  if ( (*init_func1)() != 0)
   {
     return (-ENXIO);
   }
@@ -832,6 +926,10 @@ int main(int argc, char *argv[])
     else if (strncmp(argv[i],"lwlfifo=",9)==0)
     {
       strncpy(lwl_fifo_pipe_name,argv[i]+9,256);
+    }
+    else if (strncmp(argv[i],"zmq_socket=",11)==0)
+    {
+      strncpy(zeromq_bind_address,argv[i]+11,256);
     }
     else 
     {

@@ -6,6 +6,7 @@
 /*******************************************************************************
   includes
 *******************************************************************************/
+#include <stdio.h>
 
 #include "controlshm.h"
 #include "debugshm.h"
@@ -367,9 +368,9 @@ int process_construct(void)
 
   shm_histo_ptr->filler_valid = 0;
 //    dbg_printf(DBGMSG_ERROR, "process_construct(): TEST BLA\n");
-
   if (shm_histo_ptr->server_valid != DATASHM_CFG_SRV_VALID)
   {
+    printf("shm_histo_ptr->server_valid (%p) != DATASHM_CFG_SRV_VALID (%p)\n",shm_histo_ptr->server_valid,DATASHM_CFG_SRV_VALID);
     dbg_printf(DBGMSG_ERROR, "process_construct(): No valid Histo Configuration\n");
     return SINQHM_ERR_NO_VALID_CONFIG;
   }
@@ -385,7 +386,7 @@ int process_construct(void)
     dbg_printf(DBGMSG_WARNING, "process_construct(): Header DAQ Mask is not set!\n");
   }
 
-
+  //  printf ("shm_histo_ptr->histo_type = %d\n",shm_histo_ptr->histo_type);
   switch(shm_histo_ptr->histo_type)
   {
     case FILLERTOF:
@@ -410,6 +411,13 @@ int process_construct(void)
 
     case FILLERSANS2:
         status = process_sans2_construct();
+      break;
+
+      ///////////////
+      // MiB
+    case FILLER0MQ:
+      status = process_0mq_construct();
+      status = SINQHM_OK;  // fake
       break;
 
     default:

@@ -21,6 +21,7 @@
   includes
 *******************************************************************************/
 #ifdef ARCH_X86
+#include <stdio.h>
 #include <stdlib.h>
 #endif
 
@@ -64,7 +65,6 @@ static int controlID = -1;
 __INLINE int initShmControl(void)
 {
   controlDataPtr = (volatile unsigned int*) sinqhm_shm_malloc(SHM_KEY_CONTROL,&controlID,SHM_CFG_SIZE);
-
   if(controlDataPtr == NULL)
   {
     return SINQHM_ERR_ALLOCFAIL;
@@ -109,6 +109,13 @@ __INLINE void releaseShmControl(void)
 __INLINE volatile unsigned int *getVarPointer(int varID)
 {
 
+  /////////////
+  // MiB
+  /* printf("varID = %d\n",varID); */
+  /* printf("SHM_CFG_SIZE/sizeof(int) = %d\n",SHM_CFG_SIZE/sizeof(int)); */
+  /* printf("controlDataPtr = %p\n",controlDataPtr ); */
+  /* printf("-> %x", (varID < 0 || varID >= (SHM_CFG_SIZE/sizeof(int)) || controlDataPtr == NULL) ); */
+
   if(varID < 0 || varID >= (SHM_CFG_SIZE/sizeof(int)) || controlDataPtr == NULL)
   {
     return NULL;
@@ -138,6 +145,10 @@ __INLINE int getControlVar(int varID, int* var)
   volatile unsigned int *dataPtr = NULL;
 
   dataPtr = getVarPointer(varID);
+  /////////////////
+  // MiB
+  /* printf("\t dataPtr (%p) = %d\n", dataPtr,*dataPtr); */
+
   if(dataPtr == NULL)
   {
     return SINQHM_ERR_NOTFOUND;

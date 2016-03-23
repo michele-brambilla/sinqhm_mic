@@ -87,6 +87,9 @@ int  process_psd_construct(void);
 int  process_hrpt_construct(void);
 int  process_tofmap_construct(void);
 int  process_sans2_construct(void);
+///////////
+// MiB
+int  process_0mq_construct(void);
 
 
 #endif /* _PROCESS_COMMON_H_ */

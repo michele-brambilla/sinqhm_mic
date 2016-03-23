@@ -196,6 +196,7 @@ int parseAxis(histo_descr_type *pHM, int noBank, int axis, mxml_node_t *axisNode
  * find mapping
  */
 
+  
   attribute = mxmlElementGetAttr(axisNode,"mapping");
   if(attribute == NULL)
   {
@@ -445,6 +446,9 @@ int parseConfiguration(histo_descr_type *pHM, mxml_node_t *root)
   else if(strcmp(filler,"0mq") == 0) // MiB
   {
     pHM->histo_type = FILLER0MQ;
+    /////////
+    // MiB
+    printf(" >> 0mq filler <<\n");
   }
   else
   {
@@ -796,6 +800,10 @@ int configureHisto(volatile histo_descr_type *histo_descr_ptr, histo_descr_type 
       axis_descr_ptr[axis].type = hmconfig->bank_descr.ptr[bank].axis_descr.ptr[axis].type;
       bank_descr_ptr->bank_size *= axis_descr_ptr[axis].length;
 
+
+      printf("\tconfigureHisto: hmconfig->bank_descr.ptr[bank].axis_descr.ptr[axis].type = %d\n",
+             hmconfig->bank_descr.ptr[bank].axis_descr.ptr[axis].type);
+
       switch(hmconfig->bank_descr.ptr[bank].axis_descr.ptr[axis].type)
       {
         case AXDIRECT:
@@ -1117,6 +1125,10 @@ int configureHistogramMemoryFromFile(char *filename, int test_only)
     return XMLPARSEERROR;
   }
   status = parseConfiguration(&hmconfig, root);
+  ///////////
+  // MiB
+  printf("(sinqhmsrv) filler valid: %d\n",hmconfig.filler_valid);
+
   mxmlDelete(root);
   if(status < 0)
   {

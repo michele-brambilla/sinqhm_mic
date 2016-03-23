@@ -4,9 +4,9 @@
 
 SHELL = /bin/sh
 
-CC = g++
+CC = g++ -Wno-write-strings -fpermissive
 CFLAGS = -std=c++11
-CXXFLAGS = -std=c++11
+#CXXFLAGS = -std=c++11
 
 #-------------------------------------------------------------------------------
 # Path to source files
@@ -14,7 +14,7 @@ CXXFLAGS = -std=c++11
 
 BASE_PATH = /afs/psi.ch/user/b/brambilla_m/work/sinqhm/develop
 SRC_PATH=$(BASE_PATH)/src
-
+ZMQ_DIR = /afs/psi.ch/project/sinq/sl6-64
 
 vpath %.c   $(SRC_PATH)
 vpath %.cpp $(SRC_PATH)
@@ -38,8 +38,10 @@ FIL_SRC = datashm.c          \
           process_tof.c      \
           process_tofmap.c   \
           process_sans2.c    \
+          process_0mq.c    \
           process_common.c   \
-          rawdata.c
+          rawdata.c	\
+	  zeromq.c
 
 
 # FIL_INLINE = -D_INLINE
@@ -49,6 +51,7 @@ FIL_DIR = ./rt
 FIL_MAIN_OBJ = $(FIL_MAIN:%.c=$(FIL_DIR)/%.o)
 FIL_OBJ      = $(FIL_SRC:%.c=$(FIL_DIR)/%.o)
 
+FIL_LIB = -L$(BASE_PATH)/apps/appweb-src-$(APPWEB_VER)/lib -lappwebStatic -lpthread -ldl -L$(ZMQ_DIR)/lib -lzmq -lsodium
 
 #-------------------------------------------------------------------------------
 # Server Application
@@ -130,7 +133,7 @@ SRV_INC = -I. \
           -I $(BASE_PATH)/include  -I $(APPWEB_INC)
 SRV_DEF = -DAPP_SERVER -DARCH_X86 -DFILLER_RTAI $(APPWEB_DEF)
 SRV_FLG =  $(SRV_DBG) -Wall
-SRV_LIB = -L$(BASE_PATH)/apps/appweb-src-$(APPWEB_VER)/lib  -L$(BASE_PATH)/lib -lmxml  -l$(APPWEB_LIB) -lpthread -ldl
+SRV_LIB = -L$(BASE_PATH)/apps/appweb-src-$(APPWEB_VER)/lib/x86  -L$(BASE_PATH)/lib -lmxml  -l$(APPWEB_LIB) -lpthread -ldl
 
 endif
 
@@ -283,7 +286,7 @@ $(FIL_DIR)/%.o : %.c
 ifeq "$(fil_target)" "user_x86"
 
 $(FIL_APP):  $(FIL_DIR) $(FIL_MAIN_OBJ) $(FIL_OBJ)
-	$(CC) $(FIL_MAIN_OBJ) $(FIL_OBJ) -o $@
+	$(CC) $(FIL_MAIN_OBJ) $(FIL_OBJ) $(FIL_LIB) -o $@
 
 else
 
@@ -327,6 +330,7 @@ SED_FIL_DIR = $(subst /,\/,$(FIL_DIR))\/
 $(FIL_DIR)/%.d : %.c
 	$(SHELL) -ec 'mkdir -p $(FIL_DIR) && $(CC) -M $(FIL_INC) $(FIL_DEF) $(FIL_FLG) $< \
 		| sed '\''s/^$*\.o[	 ]*:/$(SED_FIL_DIR)$*.o $(SED_FIL_DIR)$*.d : /g'\'' > $@'
+	echo $(FIL_DIR)
 
 SED_SRV_DIR = $(subst /,\/,$(SRV_DIR))\/
 
